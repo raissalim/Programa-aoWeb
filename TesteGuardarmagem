@@ -1,36 +1,50 @@
 <?php
-    
-    //imagem do marcador
-	if(isset($_FILES["arqimage"])){
-		$arqINome = $_FILES["arqimage"]["name"];
-		$arqITipo = $_FILES["arqimage"]["type"];
-		$arqITamanho = $_FILES["arqimage"]["size"];
-		$arqINomeTemp = $_FILES["arqimage"]["tmp_name"];
-		$erroImgMarc = $_FILES["arqimage"]["error"];
-		
-		if($erroImgMarc==0){			
-			if(is_uploaded_file($arqINomeTemp)){
-				if(move_uploaded_file($arqINomeTemp,"image/". $arqINome)){																														
-					$caminhoI = $arqINome;
-					echo $caminhoI;
-				}
-				else{
-					$erro = "Falha ao mover imagem do marcador";
-                    echo "$erro";
-				}
-			}
-			else{
-				$erro = "Erro no envio: A imagem do marcador não foi recebida com sucesso.";
-                echo "$erro";
-			}
-		}
-		else{
-			$erro = "Erro no envio: " . $erro;			
-            echo "$erro";
-		}						
-	}	
-	else{
-		$erro = "Imagem do Marcador enviado não encontrado";
-        echo "$erro";
-	}	
+// Conexão com o banco de dados
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "dbsessions";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+if (isset($_FILES["arqimage"])) {
+    $arqINome = $_FILES["arqimage"]["name"];
+    $arqINomeTemp = $_FILES["arqimage"]["tmp_name"];
+    $erroImgMarc = $_FILES["arqimage"]["error"];
+
+    if ($erroImgMarc == 0) {
+        if (is_uploaded_file($arqINomeTemp)) {
+            if (move_uploaded_file($arqINomeTemp, "images/" . $arqINome)) {
+                $caminhoI = "images/" . $arqINome;
+
+                // Salvar o caminho da imagem no banco de dados
+                $stmt = $conn->prepare("INSERT INTO imagens (caminho) VALUES (?)");
+                $stmt->bind_param("s", $caminhoI);
+
+                if ($stmt->execute()) {
+                    echo "Imagem salva com sucesso: " . $caminhoI;
+                } else {
+                    echo "Erro ao salvar a imagem no banco de dados: " . $stmt->error;
+                }
+
+                $stmt->close();
+            } else {
+                echo "Falha ao mover imagem do marcador";
+            }
+        } else {
+            echo "Erro no envio: A imagem do marcador não foi recebida com sucesso.";
+        }
+    } else {
+        echo "Erro no envio: " . $erroImgMarc;
+    }
+} else {
+    echo "Imagem do Marcador enviado não encontrado";
+}
+
+// Fechar conexão
+$conn->close();
 ?>
