@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrador</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <h2>Login Administrador</h2>
+            <form action="#" method="POST">
+                <div class="input-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+        </div>
+        <div class="image-container">
+            <img src="https://www.fanpop.com/clubs/monster-high/images/39425024/title/monster-high-fanart" alt="Imagem Monster High">
+        </div>
+    </div>
+</body>
+</html>
